@@ -45,11 +45,11 @@ async def start_handler(message: types.Message):
         ]
     ])
     welcome_text = (
-        "<b>👋 Welcome to Ben Bot!</b>\n\n"
-        "Just type something like:\n"
-        "<code>ben... are you real?</code>\n\n"
-        "I'll reply with a voice just like Talking Ben 🐶"
-    )
+    "<b>😎 Oh, look who showed up.</b>\n\n"
+    "Try not to embarrass urself, champ.\n"
+    "This place ain't for softies.\n"
+    "Speak smart or stay silent 🐶"
+)
     await message.answer(welcome_text, reply_markup=keyboard, parse_mode=ParseMode.HTML)
 
 # ─── Trigger on "ben" Keyword or Replies to Bot ─────────────────────────────
@@ -85,16 +85,22 @@ async def ben_voice_reply(message: types.Message):
         await message.reply("❌ Something went wrong.")
         print(f"Error: {e}")
 
-# ─── Dummy Server for Hosting (e.g. Render) ─────────────────────────────────
+# ─── Dummy HTTP Server to Keep Render Happy ─────────────────────────────────
 class DummyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(b"Ben bot is alive!")
+        self.wfile.write(b"AFK bot is alive!")
 
     def do_HEAD(self):
         self.send_response(200)
         self.end_headers()
+
+def start_dummy_server():
+    port = int(os.environ.get("PORT", 10000))  # Render injects this
+    server = HTTPServer(("0.0.0.0", port), DummyHandler)
+    print(f"Dummy server listening on port {port}")
+    server.serve_forever()
 
 # ─── Main Entry Point ───────────────────────────────────────────────────────
 async def main():
@@ -103,5 +109,6 @@ async def main():
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
+    # Start dummy HTTP server (needed for Render health check)
     threading.Thread(target=start_dummy_server, daemon=True).start()
     asyncio.run(main())
