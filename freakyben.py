@@ -92,11 +92,9 @@ class DummyHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b"Ben bot is alive!")
 
-def start_dummy_server():
-    port = int(os.environ.get("PORT", 10000))
-    server = HTTPServer(("0.0.0.0", port), DummyHandler)
-    print(f"Dummy server listening on port {port}")
-    server.serve_forever()
+    def do_HEAD(self):
+        self.send_response(200)
+        self.end_headers()
 
 # ─── Main Entry Point ───────────────────────────────────────────────────────
 async def main():
