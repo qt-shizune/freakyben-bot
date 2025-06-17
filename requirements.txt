@@ -1,10 +1,10 @@
---only-binary=:all:
-pip>=23.1
-setuptools>=65.5.0
-wheel
-aiogram==3.4.1
-python-dotenv
-aiofiles
+#--only-binary=:all:
+#pip>=23.1
+#setuptools>=65.5.0
+#wheel
 #aiogram==3.4.1
 #python-dotenv
 #aiofiles
+aiogram==3.4.1
+python-dotenv
+aiofiles
