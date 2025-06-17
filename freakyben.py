@@ -39,24 +39,36 @@ async def start_handler(message: types.Message):
         ],
         [
             InlineKeyboardButton(
-                text="➕ Add Me To Your Group",
+                text="Add Me To Your Group",
                 url=f"https://t.me/{(await bot.me()).username}?startgroup=true"
             )
         ]
     ])
     welcome_text = (
-    "<b>😎 Oh, look who showed up.</b>\n\n"
-    "Try not to embarrass urself, champ.\n"
-    "This place ain't for softies.\n"
-    "Speak smart or stay silent 🐶"
-)
+        "<b>😎 Oh, look who showed up.</b>\n\n"
+        "Try not to embarrass urself, champ.\n"
+        "This place ain't for softies.\n"
+        "Speak smart or stay silent 🐶"
+    )
     await message.answer(welcome_text, reply_markup=keyboard, parse_mode=ParseMode.HTML)
 
 # ─── Trigger on "ben" Keyword or Replies to Bot ─────────────────────────────
 @dp.message()
 async def ben_voice_reply(message: types.Message):
     try:
-        text = message.text.lower() if message.text else ""
+        text = message.text.lower().strip() if message.text else ""
+
+        # Check if exactly "ben"
+        if text == "ben":
+            file_path = os.path.join(VOICE_DIR, "ben.ogg")
+            if not os.path.isfile(file_path):
+                await message.reply("⚠️ 'ben.ogg' not found in voices.")
+                return
+            voice = FSInputFile(file_path)
+            await bot.send_chat_action(chat_id=message.chat.id, action=ChatAction.RECORD_VOICE)
+            await asyncio.sleep(1)
+            await message.reply_voice(voice)
+            return
 
         # Trigger if "ben" is in text or if replying to bot
         is_ben = "ben" in text
@@ -78,7 +90,6 @@ async def ben_voice_reply(message: types.Message):
 
         await bot.send_chat_action(chat_id=message.chat.id, action=ChatAction.RECORD_VOICE)
         await asyncio.sleep(1)
-
         await message.reply_voice(voice)
 
     except Exception as e:
@@ -109,6 +120,5 @@ async def main():
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
-    # Start dummy HTTP server (needed for Render health check)
     threading.Thread(target=start_dummy_server, daemon=True).start()
     asyncio.run(main())
