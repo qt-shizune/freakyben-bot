@@ -2,15 +2,12 @@ services:
   - type: web
     name: aiogram-bot
     runtime: python
-    env: python
-    region: oregon  # You can change the region if needed
     plan: free
+    region: oregon
 
-    buildCommand: pip install --no-cache-dir --only-binary :all: -r requirements.txt
+    buildCommand: pip install --no-cache-dir -r requirements.txt
     startCommand: python freakyben.py
 
     envVars:
       - key: BOT_TOKEN
-        value: your_actual_bot_token  # Or set this securely via Render Dashboard
-
-    autoDeploy: true
+        value: your_actual_bot_token
