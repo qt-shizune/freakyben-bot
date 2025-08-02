@@ -6,7 +6,7 @@ import threading
 import time
 import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from typing import Dict, any
+from typing import Dict, Any
 
 # Third party imports
 from aiogram import Bot, Dispatcher, types, F
